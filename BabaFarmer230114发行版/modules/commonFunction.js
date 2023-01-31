@@ -36,7 +36,32 @@ commonFunction.scrollAds = function() { //看广告
     sleep(1000);
 }
 
-
+commonFunction.thread_closeAd=function(){
+    let boundsArea = [device.width / 3, device.height / 2, device.width * 2 / 3, device.height - 200];  //左，上，右，下 
+    let mark_ad_1 = text("关闭").boundsInside(boundsArea[0], boundsArea[1], boundsArea[2], boundsArea[3]);
+    let mark_ad_2 = desc("关闭").boundsInside(boundsArea[0], boundsArea[1], boundsArea[2], boundsArea[3]);
+    let mark_ad_3 = idContains("close").boundsInside(boundsArea[0], boundsArea[1], boundsArea[2], boundsArea[3]); 
+    function waitAndCloseAd(mark_ad) {
+        if (mark_ad.exists()) {
+            mark_ad.findOne(1000).click();
+            adInterrupt++;
+            log("关闭弹窗一次，冷却1s");
+            sleep(1000);
+        }
+    }
+    let Thread = threads.start(function () { //关闭广告弹窗
+        while (true) {
+            if (textMatches(/点击领取|立即领奖|立即领取/).exists()) {  //避免误关
+                sleep(1000);
+                continue;
+            }
+            waitAndCloseAd(mark_ad_1);
+            waitAndCloseAd(mark_ad_2);
+            waitAndCloseAd(mark_ad_3);
+        }
+    });
+return Thread;
+}
 
 
 

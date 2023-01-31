@@ -26,11 +26,13 @@ sleep(2000);
 //截屏保存
 captureScreen(projectPath + "/Farm_Alipay/image/homepage.jpg");
 log("已保存截图");
-sleep(1000);
+sleep(500);
 
 //读取配置文件
-var txt = files.read(projectPath + "/Farm_Alipay/config.json");
-var myConfig = JSON.parse(txt);
+let txt = files.read(projectPath + "/Farm_Alipay/config.json");
+let config = JSON.parse(txt);
+log(config);
+let config_coordinates = config.coordinates;
 
 //找图
 let imageFilePath = projectPath + "/Farm_Alipay/image/";
@@ -52,17 +54,17 @@ function findPosition(imageName) {
         point.y = point.y + imageAwaited.height / 2;
     }
     imageAwaited.recycle(); //回收 
-    log(attribute + "查找的结果：" + point);
+    log(imageName + "查找的结果：" + point);
     return point;
 }
 
 function findAndRecord(imageName, attribute) { //找图，将图片的坐标写入myConfig
     let point = findPosition(imageName);
-    let configObject = myConfig; //注意myconfig
-    if (!configObject[attribute])
-        log(configObject[attribute] + "的属性为空，将被创建");
-    configObject[attribute].x = point.x;
-    configObject[attribute].y = point.y;
+    let configObject = config_coordinates; //注意config_coordinates
+    if (!configObject[attribute]) {
+        log(attribute + " 的属性为空! 属性将被创建");
+    }
+    configObject[attribute] = point;
     return point.x;
 }
 findAndRecord("applyFertilizer.png", "applyFertilizer");
@@ -71,7 +73,10 @@ findAndRecord("signIn.png", "signIn");
 
 if (!findAndRecord("vegetable_unripe.png", "vegetable")) {
     log("未找到未熟蔬菜，再找成熟蔬菜");
-    findAndRecord("vegetable_ripe.png", "vegetable");
+    if (!findAndRecord("vegetable_ripe.png", "vegetable")) {
+        log("也未找到，再找收割蔬菜");
+        findAndRecord("vegetable_reaped.png", "vegetable");
+    }
 }
 
 
@@ -79,12 +84,15 @@ if (!findAndRecord("vegetable_unripe.png", "vegetable")) {
 p_homepage.recycle();
 
 //保存更新
-var configText = JSON.stringify(myConfig, null, "\t");
+config.coordinates = config_coordinates;
+let configText = JSON.stringify(config, null, "\t");
 files.write(projectPath + "/Farm_Alipay/config.json", configText);
 toastLog("坐标配置已更新");
 
 
 
 
+exit();
 
-//
+
+//    */

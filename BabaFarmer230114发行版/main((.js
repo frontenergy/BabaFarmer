@@ -8,7 +8,7 @@ var projectPath = function() {
     }
 }
 
-engines.execScriptFile(projectPath() + "/Farm_Alipay/main_Alipay.js");
+engines.execScriptFile(projectPath() + "/Farm_Alipay/main_alipayFarm.js");
 
 
 

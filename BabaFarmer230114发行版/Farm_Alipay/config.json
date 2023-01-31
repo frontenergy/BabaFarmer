@@ -1,0 +1,22 @@
+{
+	"coordinates": {
+		"signIn": {
+			"x": 878,
+			"y": 1422
+		},
+		"taskList": {
+			"x": 946,
+			"y": 1934
+		},
+		"applyFertilizer": {
+			"x": 542,
+			"y": 1900
+		},
+		"vegetable": {
+			"x": 124,
+			"y": 1464
+		}
+	},
+	"matchView": {}
+	
+}
